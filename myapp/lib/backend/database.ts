@@ -1,8 +1,5 @@
 
 import mongoose = require('mongoose');
-import { Shop, ShopModel } from '../models/shop';
-import { Category, CategoryModel } from '../models/category';
-import { Subcategory, SubcategoryModel } from '../models/subcategory';
 import { Group, GroupModel } from '../models/group';
 
 import { Product, ProductModel } from '../models/product';
@@ -10,7 +7,7 @@ import { Home, HomeModel } from '../models/home';
 import { UserModel, User } from '../models/user';
 import { OrderModel, Order } from '../models/order'
 import { Message, MessageModel } from '../models/message';
-
+import { Subscriber, SubscriberModel } from '../models/subscriber';
 
 export class Database {
 
@@ -28,10 +25,6 @@ export class Database {
         console.log('Disconnected from mongoDB')
         return true;
     }
-
-
-
-
 
 
 
@@ -136,17 +129,83 @@ export class Database {
 
 
     /////////////////////////////////////////////////////////////////////////////////
+    ///             Subscribers
+    /////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Used to retrieve all subscribers
+     * 
+     */
+    public async getSubscribers(): Promise<Subscriber[]> {
+        return new Promise<Subscriber[]>((resolve, reject) => {
+            SubscriberModel.find().exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+    }
+
+    /**
+     * Used to add a subscriber to the mailing list
+     * 
+     */
+    public async postSubscriber(subscriber: Subscriber) {
+
+        let c = await new Promise<Subscriber[]>((resolve, reject) => {
+            SubscriberModel.find({ email: subscriber.email }).exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+
+        if (c.length)
+            return null;
+        else
+
+            return new Promise(async function (resolve, reject) {
+                let subscriberModel = new SubscriberModel(subscriber);
+                subscriberModel.save(function (err, success) {
+                    if (err)
+                        reject(err)
+                    else
+                        resolve(success)
+                })
+            })
+    }
+
+    /**
+    * Used to remove a Subscriber from the mailing list
+    * 
+    */
+    public async removeSubscriber(subscriber: Subscriber) {
+        return new Promise(async function (resolve, reject) {
+            SubscriberModel.findOneAndDelete({ email: subscriber.email }, function (err, success) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(success)
+            });
+        })
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////
     ///             HEADERS
     /////////////////////////////////////////////////////////////////////////////////
 
 
-     /**
-     * Used to check the database for a Shop ('Collection' in frontend)
-     * 
-     * @param shopName - the name of the Shop that we are searching for
-     */
-    public async getHeader(stub: string): Promise<Shop> {
-        return new Promise<Shop>((resolve, reject) => {
+    /**
+    * Used to check the database for a Shop ('Collection' in frontend)
+    * 
+    * @param shopName - the name of the Shop that we are searching for
+    */
+    public async getHeader(stub: string): Promise<Group> {
+        return new Promise<Group>((resolve, reject) => {
             GroupModel.findOne({ stub: stub }, "name image").exec(function (err, results) {
                 if (err)
                     reject(err)
@@ -181,16 +240,16 @@ export class Database {
     * 
     * @param stub - the Location (stub) of the Group that we are searching for
     */
-   public async getGroupById(id: string): Promise<Group> {
-    return new Promise<Group>((resolve, reject) => {
-        GroupModel.findById(id).exec(function (err, results) {
-            if (err)
-                reject(err)
-            else
-                resolve(results)
-        })
-    });
-}
+    public async getGroupById(id: string): Promise<Group> {
+        return new Promise<Group>((resolve, reject) => {
+            GroupModel.findById(id).exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+    }
 
 
     /**
@@ -245,313 +304,42 @@ export class Database {
         })
     }
 
-    
+
     /**
     * Used to delete a Group in the database ('Collection' in frontend)
     * 
     * @param shopName - the Group that we are deleting
     */
-   public async deactivateGroup(group: Group) {
-    return new Promise<Shop>(async function (resolve, reject) {
-        GroupModel.findByIdAndUpdate(group._id, { active: false }, { new: true }, function (err, success) {
-            if (err)
-                reject(err)
-            else {
-                resolve(success)
-            }
-                
-        })
-    })
-}
-
- /**
-    * Used to delete a Group in the database ('Collection' in frontend)
-    * 
-    * @param shopName - the Group that we are deleting
-    */
-   public async deleteGroup(group: Group) {
-    return new Promise<Shop>(async function (resolve, reject) {
-        GroupModel.findByIdAndRemove(group._id).exec(function (err, success) {
-            if (err)
-                reject(err)
-            else {
-                resolve(success)
-            }
-                
-        })
-    })
-}
-
-
-    /////////////////////////////////////////////////////////////////////////////////
-    ///             SHOPS 
-    /////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Used to check the database for a Shop ('Collection' in frontend)
-     * 
-     * @param stub - the Location (stub) of the Shop that we are searching for
-     */
-    public async getShop(stub: string): Promise<Shop> {
-        return new Promise<Shop>((resolve, reject) => {
-            ShopModel.findOne({ stub: stub }).exec(function (err, results) {
+    public async deactivateGroup(group: Group) {
+        return new Promise<Group>(async function (resolve, reject) {
+            GroupModel.findByIdAndUpdate(group._id, { active: false }, { new: true }, function (err, success) {
                 if (err)
                     reject(err)
-                else
-                    resolve(results)
-            })
-        });
-    }
-
-    /**
-    * Used to get the names of all the Shops ('Collections')
-    * 
-    */
-    public async getShops(): Promise<Shop[]> {
-        return new Promise<Shop[]>((resolve, reject) => {
-            ShopModel.find({}).exec(function (err, results) {
-                if (err)
-                    reject(err)
-                else
-                    resolve(results)
-            })
-        });
-    }
-
-
-
-
-    /**
-     * Used to add a Shop to the database ('Collection' in frontend)
-     * 
-     * @param shopName - the name of the Shop that we are adding
-     */
-    public async postShop(shop: Shop) {
-        return new Promise(async function (resolve, reject) {
-            let shopModel = new ShopModel(shop);
-
-            shopModel.save(function (err, success) {
-                if (err)
-                    reject(err)
-                else
+                else {
                     resolve(success)
+                }
+
             })
         })
     }
 
     /**
-     * Used to update a Shop
-     * 
-     * @param shop - The Shop we are updating
-     */
-    public async updateShop(shop: Shop) {
-        return new Promise<Shop>(async function (resolve, reject) {
-            ShopModel.findByIdAndUpdate(shop._id, shop, { new: true }, function (err, success) {
+       * Used to delete a Group in the database ('Collection' in frontend)
+       * 
+       * @param shopName - the Group that we are deleting
+       */
+    public async deleteGroup(group: Group) {
+        return new Promise<Group>(async function (resolve, reject) {
+            GroupModel.findByIdAndRemove(group._id).exec(function (err, success) {
                 if (err)
                     reject(err)
-                else
+                else {
                     resolve(success)
+                }
+
             })
         })
     }
-
-    /**
-    * Used to delete a Shop in the database ('Collection' in frontend)
-    * 
-    * @param shopName - the name of the Shop that we are deleting
-    */
-    public async deactivateShop(shop: Shop) {
-        return new Promise<Shop>(async function (resolve, reject) {
-            ShopModel.findByIdAndUpdate(shop._id, { active: false }, { new: true }, function (err, success) {
-                if (err)
-                    reject(err)
-                else
-                    resolve(success)
-            })
-        })
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////
-    ///             CATEGORIES
-    /////////////////////////////////////////////////////////////////////////////////
-
-    /**
-    * Used to get the names of all the Categories within a Shop ('Collection')
-    * 
-    */
-    public async getCategories(shopName: string): Promise<Category[]> {
-        return new Promise<Category[]>((resolve, reject) => {
-            CategoryModel.find({ shop: shopName }/*, 'name image'*/).exec(function (err, results) {
-                if (err)
-                    reject(err)
-                else
-                    resolve(results)
-            })
-        });
-    }
-
-    /**
-    * Used to get a Category by its Location (stub)
-    * 
-    */
-    public async getCategory(stub: string): Promise<Category> {
-        return new Promise<Category>((resolve, reject) => {
-            CategoryModel.findOne({ stub: stub }).exec(function (err, results) {
-                if (err)
-                    reject(err)
-                else
-                    resolve(results)
-            })
-        });
-    }
-
-
-    /**
-     * Used to update a Subcategory
-     * 
-     * @param product - The Subcategory we are updating
-     */
-    public async updateCategory(cat: Category) {
-        return new Promise<Category>(async function (resolve, reject) {
-            CategoryModel.findByIdAndUpdate(cat._id, cat, { new: true }, function (err, success) {
-                if (err)
-                    reject(err)
-                else
-                    resolve(success)
-            })
-        })
-    }
-
-
-
-    /**
-    * Used to add a Category to the database 
-    * 
-    * @param shopName - the name of the Shop
-    * @param categoryName - the name of the new Category
-    */
-    public async postCategory(cat: Category) {
-        return new Promise(async function (resolve, reject) {
-            let categoryModel = new CategoryModel(cat);
-            console.log(cat);
-            categoryModel.save(function (err, success) {
-                if (err)
-                    reject(err)
-                else
-                    resolve(success)
-            })
-        })
-    }
-
-
-    /**
-    * Used to delete a Category in the database 
-    * 
-    * @param shopName - Shop
-    * @param categoryName - the name of the Category we are deleting
-    */
-    public async deactivateCategory(category: Category) {
-        return new Promise<Category>(async function (resolve, reject) {
-            CategoryModel.findByIdAndUpdate(category._id, { active: false }, { new: true }, function (err, success) {
-                if (err)
-                    reject(err)
-                else
-                    resolve(success)
-            })
-        })
-    }
-
-
-    /////////////////////////////////////////////////////////////////////////////////
-    ///             SUBCATEGORIES
-    /////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Used to add a Subcategory
-     * 
-     * @param shopName - the name of the Shop
-     * @param categoryName - the name of the Category
-     * @param subcategoryName - the name of the Subcategory we are adding
-     */
-    public async postSubcategory(sub: Subcategory) {
-        return new Promise<Subcategory>(async function (resolve, reject) {
-            let subcategoryModel = new SubcategoryModel(sub);
-
-            subcategoryModel.save(function (err, success) {
-                if (err)
-                    reject(err)
-                else
-                    resolve(success)
-            })
-        })
-    }
-
-    /**
-     * Used to update a Subcategory
-     * 
-     * @param product - The Subcategory we are updating
-     */
-    public async updateSubcategory(sub: Subcategory) {
-        return new Promise<Subcategory>(async function (resolve, reject) {
-            SubcategoryModel.findByIdAndUpdate(sub._id, sub, { new: true }, function (err, success) {
-                if (err)
-                    reject(err)
-                else
-                    resolve(success)
-            })
-        })
-    }
-
-    /**
-    * Used to get a Subcategory by its location (stub)
-    * 
-    */
-    public async getSubcategory(stub: string): Promise<Subcategory> {
-        console.log(stub);
-        return new Promise<Subcategory>((resolve, reject) => {
-            SubcategoryModel.findOne({ stub: stub }).exec(function (err, results) {
-                if (err)
-                    reject(err)
-                else
-                    resolve(results)
-            })
-        });
-    }
-
-    /**
-    * Used to get the names of all the Subcategories within a Category
-    * 
-    */
-    public async getSubcategories(shopName: string, categoryName: string): Promise<Subcategory[]> {
-        return new Promise<Subcategory[]>((resolve, reject) => {
-            SubcategoryModel.find({ shop: shopName, category: categoryName }).exec(function (err, results) {
-                if (err)
-                    reject(err)
-                else
-                    resolve(results)
-            })
-        });
-    }
-
-    /**
-    * Used to delete a Subcategory in the database 
-    * 
-    * @param shopName - Shop
-    * @param categoryName - Category
-    * @param subName - the name of the Subcategory that we are deleting
-    */
-    public async deactivateSubcategory(subcategory: Subcategory) {
-        return new Promise<Subcategory>(async function (resolve, reject) {
-            SubcategoryModel.findByIdAndUpdate(subcategory._id, { active: false }, { new: true }, function (err, success) {
-                if (err)
-                    reject(err)
-                else
-                    resolve(success)
-            })
-        })
-    }
-
-
 
     /////////////////////////////////////////////////////////////////////////////////
     ///             ORDERS
@@ -711,23 +499,23 @@ export class Database {
                     resolve(success)
 
                 }
-                    
+
             })
         })
     }
 
-     /**
-     * Used to delete a Product
-     * 
-     * @param product - The Product we are delete
-     */
+    /**
+    * Used to delete a Product
+    * 
+    * @param product - The Product we are delete
+    */
     public async deleteProduct(product: Product) {
         return new Promise<Product>(async function (resolve, reject) {
             ProductModel.findByIdAndRemove(product._id).exec((err, success) => {
                 if (err)
                     reject(err)
-                else 
-                    resolve(success)    
+                else
+                    resolve(success)
             })
         })
     }
@@ -771,35 +559,35 @@ export class Database {
     * Used to get the names of all the Subcategories within a Category
     * 
     */
-   public async getActiveProducts(loc: string): Promise<Product[]> {
-    return new Promise<Product[]>((resolve, reject) => {
-        //console.log('Get Products - Location then regex \n');
-        //console.log(loc);
-        let regex = new RegExp(loc.substring(1));
-        //console.log(regex);
-        ProductModel.find({ location: regex, active: true }).exec(function (err, results) {
-            if (err)
-                reject(err)
-            else
-                resolve(results)
-        })
-    });
-}
+    public async getActiveProducts(loc: string): Promise<Product[]> {
+        return new Promise<Product[]>((resolve, reject) => {
+            //console.log('Get Products - Location then regex \n');
+            //console.log(loc);
+            let regex = new RegExp(loc.substring(1));
+            //console.log(regex);
+            ProductModel.find({ location: regex, active: true }).exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+    }
 
- /**
-    * Used to get the names of all the Subcategories within a Category
-    * 
-    */
-   public async getAllActiveProducts(): Promise<Product[]> {
-    return new Promise<Product[]>((resolve, reject) => {
-        ProductModel.find({ active: true }).exec(function (err, results) {
-            if (err)
-                reject(err)
-            else
-                resolve(results)
-        })
-    });
-}
+    /**
+       * Used to get the names of all the Subcategories within a Category
+       * 
+       */
+    public async getAllActiveProducts(): Promise<Product[]> {
+        return new Promise<Product[]>((resolve, reject) => {
+            ProductModel.find({ active: true }).exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+    }
 
 
     /**
@@ -864,11 +652,11 @@ export class Database {
     //                      Messages
     ///////////////////////////////////////////////////////////////////////
 
-     /**
-     * Used to add a Message
-     * 
-     * @param message - The Message we are adding
-     */
+    /**
+    * Used to add a Message
+    * 
+    * @param message - The Message we are adding
+    */
     public async postMessage(message: Message) {
         return new Promise(async function (resolve, reject) {
             let messageModel = new MessageModel(message);
@@ -882,11 +670,11 @@ export class Database {
         })
     }
 
-     /**
-     * Used to add a Message
-     * 
-     * @param message - The Message we are adding
-     */
+    /**
+    * Used to add a Message
+    * 
+    * @param message - The Message we are adding
+    */
     public async updateMessage(message: Message) {
         return new Promise(async function (resolve, reject) {
             MessageModel.findByIdAndUpdate(message._id, message, { new: true }, function (err, success) {
@@ -902,31 +690,31 @@ export class Database {
     * 
     * 
     */
-   public async getMessages(): Promise<Message[]> {
-    return new Promise<Message[]>((resolve, reject) => {
-        MessageModel.find().exec(function (err, results) {
-            if (err)
-                reject(err)
-            else 
-                resolve(results)
-        })
-    });
-}
+    public async getMessages(): Promise<Message[]> {
+        return new Promise<Message[]>((resolve, reject) => {
+            MessageModel.find().exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+    }
 
- /** 
-    * 
-    * 
-    */
-   public async getMessageById(id: string): Promise<Message> {
-    return new Promise<Message>((resolve, reject) => {
-        MessageModel.findById(id).exec(function (err, results) {
-            if (err)
-                reject(err)
-            else 
-                resolve(results)
-        })
-    });
-}
+    /** 
+       * 
+       * 
+       */
+    public async getMessageById(id: string): Promise<Message> {
+        return new Promise<Message>((resolve, reject) => {
+            MessageModel.findById(id).exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+    }
 
 
 

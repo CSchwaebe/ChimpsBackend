@@ -251,111 +251,6 @@ export class Routes {
                 })
             })
 
-        /////////////////////////////////////////////////////////////////////////
-        //              CATEGORIES
-        /////////////////////////////////////////////////////////////////////////
-
-        app.route('/api/categories')
-            .post((req: Request, res: Response) => {
-                database.postCategory(req.body);
-                res.status(200).send({
-                    message: req.body
-                })
-            })
-
-        app.route('/api/categories/update')
-            .post(async (req: Request, res: Response) => {
-                //console.log(req.body);
-                let result = await database.updateCategory(req.body);
-                res.status(200).send({
-                    data: result
-                })
-            })
-
-        app.route('/api/categories/deactivate')
-            .post(async (req: Request, res: Response) => {
-                let result = await database.deactivateCategory(req.body);
-
-                res.status(200).send({
-                    data: result
-                })
-            })
-
-
-        app.route('/api/categories/:collection/:name')
-            .get(async (req: Request, res: Response) => {
-                let stub = req.params.collection + '/' + req.params.name;
-                console.log(stub);
-                let category = await database.getCategory(stub);
-                res.status(200).send({
-                    data: category
-                })
-            })
-
-        app.route('/api/categories/:collection')
-            .get(async (req: Request, res: Response) => {
-
-                let categoryArray = await database.getCategories(req.params.collection);
-                console.log(req.params.collection);
-                res.status(200).send({
-                    data: categoryArray
-                })
-            })
-
-
-
-        /////////////////////////////////////////////////////////////////////////
-        //              SUBCATEGORIES
-        /////////////////////////////////////////////////////////////////////////
-
-        app.route('/api/subcategories')
-            .post((req: Request, res: Response) => {
-                console.log(req.body);
-                database.postSubcategory(req.body);
-                res.status(200).send({
-                    data: req.body
-                })
-            })
-
-        app.route('/api/subcategories/update')
-            .post(async (req: Request, res: Response) => {
-                //console.log(req.body);
-                let result = await database.updateSubcategory(req.body);
-                res.status(200).send({
-                    data: result
-                })
-            })
-
-        app.route('/api/subcategories/deactivate')
-            .post(async (req: Request, res: Response) => {
-                let result = await database.deactivateSubcategory(req.body);
-                res.status(200).send({
-                    data: result
-                })
-            })
-
-        app.route('/api/subcategories/:collection/:category/:name')
-            .get(async (req: Request, res: Response) => {
-                console.log('route stub')
-                let stub = req.params.collection + '/' + req.params.category + '/' + req.params.name;
-                let subcategory = await database.getSubcategory(stub);
-                console.log(' end route');
-                console.log(subcategory);
-                res.status(200).send({
-                    data: subcategory
-                })
-            })
-
-        app.route('/api/subcategories/:collection/:category')
-            .get(async (req: Request, res: Response) => {
-
-                let subcategoryArray = await database.getSubcategories(req.params.collection, req.params.category);
-                console.log(subcategoryArray);
-                res.status(200).send({
-                    data: subcategoryArray
-                })
-            })
-
 
         /////////////////////////////////////////////////////////////////////////
         //              SHIPPING
@@ -579,7 +474,7 @@ export class Routes {
             })
 
 
- /////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////
         //              Messages
         /////////////////////////////////////////////////////////////////////////
 
@@ -614,6 +509,38 @@ export class Routes {
                 })
             })
 
+
+
+        /////////////////////////////////////////////////////////////////////////
+        //              Subscribers
+        /////////////////////////////////////////////////////////////////////////  
+
+        app.route('/api/subscribers')
+            .post((req: Request, res: Response) => {
+                let result = database.postSubscriber(req.body);
+                res.status(200).send({
+                    data: result
+                })
+            })
+
+            .get(async (req: Request, res: Response) => {
+                let result = await database.getSubscribers();
+                res.status(200).send({
+                    data: result
+                })
+            })
+
+        app.route('/api/subscribers/remove')
+            .post((req: Request, res: Response) => {
+                let result = database.removeSubscriber(req.body);
+                res.status(200).send({
+                    data: result
+                })
+            })
+
+
+
+
         //REMOVE THESE NEXT THREE METHODS ?? - todo
 
 
@@ -642,7 +569,7 @@ export class Routes {
             })
 
 
-       
+
 
 
 
