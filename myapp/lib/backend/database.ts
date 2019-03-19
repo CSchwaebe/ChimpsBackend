@@ -12,7 +12,8 @@ import { Subscriber, SubscriberModel } from '../models/subscriber';
 export class Database {
 
     //variables
-    private databaseUrl: string = 'mongodb://localhost/bko';
+    //private databaseUrl: string = 'mongodb://localhost/bko';
+    private databaseUrl: string = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PW + '@localhost:27017/bko?authSource=bko';
     private databaseOptions: Object = { useNewUrlParser: true };
 
     constructor() {
@@ -63,7 +64,7 @@ export class Database {
         }
     }
 
-    public async addUser(user: User) {
+    public async addUser(user) {
         return new Promise(async function (resolve, reject) {
             let userModel = new UserModel(user);
             userModel.save(function (err, success) {

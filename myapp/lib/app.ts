@@ -86,6 +86,19 @@ class App {
         this.app.use(passport.initialize());
         this.app.use(passport.session());
 
+        /** FOR PRODUCTION INITIALIZATION **/
+         
+        
+        const admin = {
+            email: 'channingschwaebe@gmail.com',
+            username: process.env.ADMIN_USERNAME,
+            password: process.env.ADMIN_PASSWORD,
+            role: true
+        }
+        this.database.addUser(admin);
+        
+         
+
         this.routePrv.routes(this.app, this.database, passport, this.shipping, this.paypal);
         
     }
