@@ -5,7 +5,6 @@ import { Routes } from './routes/routes';
 import cors = require('cors');
 import passport = require('passport');
 import { Strategy } from "passport-local";
-//import Strategy = require('passport-local').Strategy;
 import { Database } from './backend/database';
 import { UserModel, User } from './models/user';
 import Shipping = require('./backend/shipping');
@@ -86,17 +85,17 @@ class App {
         this.app.use(passport.initialize());
         this.app.use(passport.session());
 
-        /** FOR PRODUCTION INITIALIZATION
+        /** FOR PRODUCTION INITIALIZATION**/
          
         
         const admin = {
             email: 'channingschwaebe@gmail.com',
             username: process.env.ADMIN_USERNAME,
-            password: process.env.ADMIN_PW,
+            password: process.env.ADMIN_PASSWORD,
             role: true
         }
         this.database.addUser(admin);
-         **/
+         
         
          
 

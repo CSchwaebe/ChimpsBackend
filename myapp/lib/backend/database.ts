@@ -12,8 +12,8 @@ import { Subscriber, SubscriberModel } from '../models/subscriber';
 export class Database {
 
     //variables
-    private databaseUrl: string = 'mongodb://localhost/bko';
-    //private databaseUrl: string = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PW + '@localhost:27017/bko?authSource=bko';
+    //private databaseUrl: string = 'mongodb://localhost/bko';
+    private databaseUrl: string = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PW + '@localhost:27017/bigkat?authSource=bigkat';
     private databaseOptions: Object = { useNewUrlParser: true };
 
     constructor() {
