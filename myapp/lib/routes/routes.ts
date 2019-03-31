@@ -41,8 +41,10 @@ export class Routes {
         //Faiure redirect isnt what we want because express doesnt handle the views
         app.route('/login')
             .post(
+                
                 passport.authenticate('local', { session: true }),
                 function (req, res) {
+                    console.log('Route /login');
                     console.log('USER:\n');
                     console.log(req.user);
 
@@ -54,6 +56,7 @@ export class Routes {
             .post(
                 passport.authenticate('local'),
                 function (req, res) {
+                    console.log('Route /login');
                     console.log('In Post\n')
                     console.log(req.user);
                     if (req.user.role) {
@@ -218,9 +221,28 @@ export class Routes {
                 })
             })
 
-        app.route('/api/collections/:stub')
+        app.route('/api/collections/:collection')
             .get(async (req: Request, res: Response) => {
-                let shop = await database.getGroupByStub(req.params.stub)
+                let shop = await database.getGroupByStub(req.params.collection)
+                res.status(200).send({
+                    data: shop
+                })
+            })
+
+        app.route('/api/collections/:collection/:category')
+            .get(async (req: Request, res: Response) => {
+                let stub = req.params.collection + '/' + req.params.category;
+                let shop = await database.getGroupByStub(stub)
+                res.status(200).send({
+                    data: shop
+                })
+            })
+
+       
+        app.route('/api/collections/:collection/:category/:subcategory')
+            .get(async (req: Request, res: Response) => {
+                let stub = req.params.collection + '/' + req.params.category + '/' + req.params.subcategory;
+                let shop = await database.getGroupByStub(stub)
                 res.status(200).send({
                     data: shop
                 })

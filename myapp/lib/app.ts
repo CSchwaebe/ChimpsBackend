@@ -86,16 +86,17 @@ class App {
         this.app.use(passport.initialize());
         this.app.use(passport.session());
 
-        /** FOR PRODUCTION INITIALIZATION **/
+        /** FOR PRODUCTION INITIALIZATION
          
         
         const admin = {
             email: 'channingschwaebe@gmail.com',
             username: process.env.ADMIN_USERNAME,
-            password: process.env.ADMIN_PASSWORD,
+            password: process.env.ADMIN_PW,
             role: true
         }
         this.database.addUser(admin);
+         **/
         
          
 

@@ -12,8 +12,8 @@ import { Subscriber, SubscriberModel } from '../models/subscriber';
 export class Database {
 
     //variables
-    //private databaseUrl: string = 'mongodb://localhost/bko';
-    private databaseUrl: string = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PW + '@localhost:27017/bko?authSource=bko';
+    private databaseUrl: string = 'mongodb://localhost/bko';
+    //private databaseUrl: string = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PW + '@localhost:27017/bko?authSource=bko';
     private databaseOptions: Object = { useNewUrlParser: true };
 
     constructor() {
@@ -92,7 +92,7 @@ export class Database {
                 if (err)
                     reject(err)
                 else
-                    resolve(results)
+                    resolve(results);
             })
         });
     }
@@ -546,7 +546,7 @@ export class Database {
             //console.log('Get Products - Location then regex \n');
             //console.log(loc);
             let regex = new RegExp(loc.substring(1));
-            //console.log(regex);
+            console.log(regex);
             ProductModel.find({ location: regex }).exec(function (err, results) {
                 if (err)
                     reject(err)
