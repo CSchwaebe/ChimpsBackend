@@ -13,7 +13,6 @@ import Paypal = require('./backend/paypal');
 
 class App {
 
-
     public app: express.Application;
     public routePrv: Routes = new Routes();
     database: Database;
@@ -85,7 +84,7 @@ class App {
         this.app.use(passport.initialize());
         this.app.use(passport.session());
 
-        /** FOR PRODUCTION INITIALIZATION**/
+        /** FOR PRODUCTION INITIALIZATION
          
         
         const admin = {
@@ -95,6 +94,8 @@ class App {
             role: true
         }
         this.database.addUser(admin);
+
+        **/
          
         
          

@@ -672,9 +672,9 @@ export class Database {
     }
 
     /**
-    * Used to add a Message
+    * Used to update a Message
     * 
-    * @param message - The Message we are adding
+    * @param message - The Message we are updating
     */
     public async updateMessage(message: Message) {
         return new Promise(async function (resolve, reject) {
@@ -686,6 +686,22 @@ export class Database {
             })
         })
     }
+
+    /**
+    * Used to add a Message
+    * 
+    * @param message - The Message we are adding
+    */
+   public async deleteMessage(message: Message) {
+    return new Promise(async function (resolve, reject) {
+        MessageModel.findByIdAndDelete(message._id, function (err, success) {
+            if (err)
+                reject(err)
+            else
+                resolve(success)
+        })
+    })
+}
 
     /** 
     * 

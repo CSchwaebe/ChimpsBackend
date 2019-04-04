@@ -531,6 +531,14 @@ export class Routes {
                 })
             })
 
+        app.route('/api/messages/delete')
+            .post((req: Request, res: Response) => {
+                let result = database.deleteMessage(req.body);
+                res.status(200).send({
+                    data: result
+                })
+            })
+
 
 
         /////////////////////////////////////////////////////////////////////////
