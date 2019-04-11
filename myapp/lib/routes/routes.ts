@@ -2,12 +2,13 @@ import { Request, Response } from "express";
 import { Database } from '../backend/database';
 import Shipping = require('../backend/shipping');
 import Paypal = require('../backend/paypal');
+import Square = require('../backend/square');
 import * as jwt from 'jsonwebtoken';
 
 export class Routes {
     //database: Database = new Database();
 
-    public routes(app, database: Database, passport, shipping: Shipping, Paypal: Paypal): void {
+    public routes(app, database: Database, passport, shipping: Shipping, Paypal: Paypal, Square: Square): void {
         app.route('/')
             .get((req: Request, res: Response) => {
                 res.status(200).send({
@@ -74,15 +75,15 @@ export class Routes {
 
         app.route('/admin/verify')
             .post((req: Request, res: Response) => {
-                console.log(" IN ADMIN VERIFY ROUTE")
-                console.log(req.body.token);
+                //console.log(" IN ADMIN VERIFY ROUTE")
+                //console.log(req.body.token);
                 let result = jwt.verify(req.body.token, process.env.SECRET, (err, decoded) => {
                     if (err)
                         return false;
                     if (decoded)
                         return true;
                 });
-                console.log(result);
+                //console.log(result);
                 res.status(200).send({
                     data: result
                 })
@@ -378,17 +379,36 @@ export class Routes {
 
         app.route('/api/orders/refund')
             .post(async (req: Request, res: Response) => {
-                let paypalResponse = await Paypal.refund(req.body.order.transactionId, req.body.amount);
-                if (paypalResponse) {
-                    let result = await database.updateOrder(req.body.order);
-                    res.status(200).send({
-                        data: result
-                    })
-                } else {
-                    res.status(500).send({
-                        message: 'Could not complete refund'
-                    })
+                
+                if (req.body.order.payment.processor === 'Square') {
+                    let response = await Square.refund(req.body.order, req.body.amount);
+                   
+                    if (response) {
+                        let result = await database.updateOrder(req.body.order);
+                        res.status(200).send({
+                            data: result
+                        })
+                    } else {
+                        res.status(200).send({
+                            data: null
+                        })
+                    }
                 }
+                else if (req.body.order.payment.processor === 'Paypal') {
+                    let response = await Paypal.refund(req.body.order.transactionId, req.body.amount);
+                    if (response) {
+                        let result = await database.updateOrder(req.body.order);
+                        res.status(200).send({
+                            data: result
+                        })
+                    } else {
+                        res.status(500).send({
+                            message: 'Could not complete refund'
+                        })
+                    }
+                }
+                 
+                
 
             })
 
@@ -423,10 +443,10 @@ export class Routes {
             })
 
 
-        app.route('/api/products/putback')
+        app.route('/api/products/restock')
             .post(async (req: Request, res: Response) => {
                 console.log('In route');
-                let result = await database.putProductBack(req.body.id, req.body.size, req.body.quantity);
+                let result = await database.restockProduct(req.body.id, req.body.size, req.body.quantity);
                 res.status(200).send({
                     data: result
                 })
@@ -568,9 +588,22 @@ export class Routes {
                 })
             })
 
+        /////////////////////////////////////////////////////////////////////////
+        //              Square
+        /////////////////////////////////////////////////////////////////////////  
 
-
-
+            app.route('/api/square/pay')
+            .post(async (req: Request, res: Response) => {
+                console.log(req.body);
+                let result = await Square.processPayment(req.body);
+                console.log('result');
+                console.log(result);
+                //let result = database.removeSubscriber(req.body);
+                res.status(200).send({
+                    data: result
+                })
+            })
+        
         //REMOVE THESE NEXT THREE METHODS ?? - todo
 
 

@@ -12,8 +12,8 @@ import { Subscriber, SubscriberModel } from '../models/subscriber';
 export class Database {
 
     //variables
-    //private databaseUrl: string = 'mongodb://localhost/bko';
-    private databaseUrl: string = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PW + '@localhost:27017/bigkat?authSource=bigkat';
+    private databaseUrl: string = 'mongodb://localhost/bko';
+    //private databaseUrl: string = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PW + '@localhost:27017/bigkat?authSource=bigkat';
     private databaseOptions: Object = { useNewUrlParser: true };
 
     constructor() {
@@ -164,10 +164,9 @@ export class Database {
             })
         });
 
-        if (c.length)
+        if (c.length) {
             return null;
-        else
-
+        } else {
             return new Promise(async function (resolve, reject) {
                 let subscriberModel = new SubscriberModel(subscriber);
                 subscriberModel.save(function (err, success) {
@@ -177,6 +176,8 @@ export class Database {
                         resolve(success)
                 })
             })
+        }
+           
     }
 
     /**
@@ -629,24 +630,15 @@ export class Database {
     * Used to put a product back if Checkout is not completed
     * 
     */
-    public async putProductBack(id: string, size: string, quantity: number): Promise<Product> {
-        return new Promise<Product>((resolve, reject) => {
-            let key: string = 'quantity.' + size;
-            let value: number = quantity;
-            let query = {};
-            query[key] = value;
-            console.log('In database');
-            console.log(query);
-            ProductModel.findByIdAndUpdate(id, { $inc: query }, { new: true }).exec(function (err, results) {
-                if (err)
-                    reject(err)
-                else {
-                    console.log('Got Results')
-                    console.log(results);
-                    resolve(results)
-                }
-            })
-        });
+    public async restockProduct(id: string, size: string, quantity: number): Promise<Product> {
+        let product: Product = await this.getProductById(id);
+        for (let i = 0; i < product.inventory.length; i++) {
+            if (product.inventory[i].size === size) {
+                product.inventory[i].quantity += quantity;
+                break;
+            }
+        }
+        return this.updateProduct(product);
     }
 
     ///////////////////////////////////////////////////////////////////////

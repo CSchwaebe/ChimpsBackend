@@ -27,7 +27,7 @@ module.exports = class Shipping {
         let tmpShipment = await shipment.save();
           
          
-          let lowestRate = tmpShipment.lowestRate();
+          let lowestRate = await tmpShipment.lowestRate();
 
           let ret = {
               id: tmpShipment.id,

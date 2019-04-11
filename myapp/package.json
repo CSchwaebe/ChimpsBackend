@@ -25,6 +25,7 @@
     "mongoose": "5.3.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "paypal-rest-sdk": "^1.8.1"
+    "paypal-rest-sdk": "^1.8.1",
+    "square-connect": "^2.20190327.1"
   }
 }

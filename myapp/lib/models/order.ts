@@ -1,6 +1,6 @@
 import { Document, model, Model, Schema } from 'mongoose';
 import { Product, ProductSchema } from './product';
-
+import { SquareTransactionResponseSchema, SquareTransactionResponse } from './square';
 
 const CartProductSchema: Schema = new Schema({
     product: ProductSchema,
@@ -55,15 +55,24 @@ const ReturnSchema: Schema = new Schema({
     refund_type: String,
     refund_shipping: Boolean,
     refund_shipping_amount: Number,
+    refund_tax: Number,
     refund_amount: Number,
     refunded: Boolean,
     notes: String
 });
 
+
+const PaymentSchema: Schema = new Schema({
+    processor: String,
+    square: SquareTransactionResponseSchema,
+    paypal_txID: String,
+});
+
+
 const OrderSchema: Schema = new Schema({
     address: AddressSchema,
     products: [CartProductSchema],
-    transactionId: String,
+    payment: PaymentSchema,
     subtotal: Number,
     tax: Number,
     taxRate: Number,
@@ -97,6 +106,12 @@ interface CartProduct extends Document {
 };
 
 
+interface Payment extends Document {
+    processor: string,
+    square?: SquareTransactionResponse,
+    paypal_txID?: string,
+}
+
 interface Address extends Document {
     name: string,
     email: string,
@@ -117,6 +132,7 @@ interface Return extends Document {
     refund_type: string,
     refund_shipping: boolean,
     refund_shipping_amount: number,
+    refund_tax: number,
     refund_amount: number,
     refunded_items: CartProduct[],
     refunded: boolean,
@@ -147,4 +163,4 @@ interface Order extends Document {
 };
 
 
-export { Order, CartProduct, OrderSchema, CartSchema, CartProductSchema, OrderModel };
+export { Order, CartProduct, OrderSchema, CartSchema, CartProductSchema, OrderModel, PaymentSchema, Payment };

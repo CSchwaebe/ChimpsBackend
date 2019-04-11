@@ -9,7 +9,7 @@ import { Database } from './backend/database';
 import { UserModel, User } from './models/user';
 import Shipping = require('./backend/shipping');
 import Paypal = require('./backend/paypal');
-
+import Square = require('./backend/square');
 
 class App {
 
@@ -18,12 +18,14 @@ class App {
     database: Database;
     shipping; 
     paypal;
+    square;
 
     constructor() {
         //let Shipping = require('./backend/shipping')
         this.shipping = new Shipping();
         this.database = new Database();
         this.paypal = new Paypal();
+        this.square = new Square();
         
         console.log(this.database);
         
@@ -84,7 +86,7 @@ class App {
         this.app.use(passport.initialize());
         this.app.use(passport.session());
 
-        /** FOR PRODUCTION INITIALIZATION
+        /** FOR PRODUCTION INITIALIZATION 
          
         
         const admin = {
@@ -95,12 +97,14 @@ class App {
         }
         this.database.addUser(admin);
 
-        **/
+        */
+
+        
          
         
          
 
-        this.routePrv.routes(this.app, this.database, passport, this.shipping, this.paypal);
+        this.routePrv.routes(this.app, this.database, passport, this.shipping, this.paypal, this.square);
         
     }
 

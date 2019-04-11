@@ -12,7 +12,7 @@
         "allowJs": true
     },
     "include": [
-        "lib/**/*.ts"
+        "lib/**/*.ts", "lib/backend/square.js"
     ],
     "exclude": [
         "node_modules"
