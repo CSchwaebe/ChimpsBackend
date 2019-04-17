@@ -1,6 +1,6 @@
 import { Document, model, Model, Schema } from 'mongoose';
 import * as mongoose from "mongoose";
-import * as bcrypt from "bcrypt-nodejs";
+import * as bcrypt from "bcrypt";
 
 /*
 const UserSchema = new Schema({
@@ -58,8 +58,8 @@ UserSchema.methods.comparePassword = function (candidatePassword: string): Promi
     
     return new Promise((resolve, reject) => {
         bcrypt.compare(candidatePassword, password, (err, success) => {
-            //console.log(err);
-            //console.log(success);
+            console.log(err);
+            console.log(success);
             if (err) return reject(err);
             return resolve(success);
         });
