@@ -45,7 +45,9 @@ module.exports = class Shipping {
         console.log('IN BACKEND SHIPPING PURCHASE');
         //console.log(this.api.Shipment)
         let s = await this.api.Shipment.retrieve(id);
-        let x = await s.buy(rate);
+        let x = await s.buy(rate).catch((e) => {
+            console.log(e)
+        });
         console.log(x);
         console.log('END BACKEND SHIPPING PURCHASE');
         let obj = {

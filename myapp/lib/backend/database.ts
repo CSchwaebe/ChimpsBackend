@@ -12,7 +12,8 @@ import { Subscriber, SubscriberModel } from '../models/subscriber';
 export class Database {
 
     //variables
-    private databaseUrl: string = 'mongodb://localhost/bko';
+    //private databaseUrl: string = 'mongodb://localhost/bko';
+    private databaseUrl: string = 'mongodb://localhost:27017/bko';
     //private databaseUrl: string = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PW + '@localhost:27017/bigkat?authSource=bigkat';
     private databaseOptions: Object = { useNewUrlParser: true };
 
@@ -68,10 +69,16 @@ export class Database {
         return new Promise(async function (resolve, reject) {
             let userModel = new UserModel(user);
             userModel.save(function (err, success) {
-                if (err)
-                    reject(err)
-                else
+                if (err) {
+                    console.log('Error in Add User')
+                    console.log(err)
+                    reject(err);
+                }
+                else {
+                    console.log("Success in Add user");
+                    console.log(success)
                     resolve(success)
+                }
             })
         })
     }
