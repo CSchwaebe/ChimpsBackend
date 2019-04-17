@@ -1,6 +1,6 @@
 import { Document, model, Model, Schema } from 'mongoose';
 import * as mongoose from "mongoose";
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcrypt-nodejs";
 
 /*
 const UserSchema = new Schema({
