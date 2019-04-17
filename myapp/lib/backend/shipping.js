@@ -13,6 +13,7 @@ module.exports = class Shipping {
         console.log(address);
         let verification = await this.toAddr(address); 
         console.log(verification);
+        console.log(weight);
         if (verification === false) {
             return null;
         }
@@ -26,8 +27,9 @@ module.exports = class Shipping {
           
         let tmpShipment = await shipment.save();
           
+        
          
-          let lowestRate = await tmpShipment.lowestRate();
+        let lowestRate = await tmpShipment.lowestRate();
 
           let ret = {
               id: tmpShipment.id,
@@ -94,6 +96,7 @@ module.exports = class Shipping {
     async refund(id) {
         console.log('WE made it to shipping.js')
         let shipment = await this.api.Shipment.retrieve(id);
+
         let refundStatus = (await shipment.refund()).refund_status;
         return refundStatus;    
     }  

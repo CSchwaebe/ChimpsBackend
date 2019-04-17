@@ -5,9 +5,10 @@ module.exports = class Square {
 
         this.defaultClient = SquareConnect.ApiClient.instance;
         this.oauth2 = this.defaultClient.authentications['oauth2'];
-        this.oauth2.accessToken = "EAAAEBysA2yFFXAvZFQ26v0Kf9whVchhiYV4p8nzlyQxNYGwlLIrGAgtlEKvgGOn";
+        this.oauth2.accessToken = process.env.SQUARE_ACCESSTOKEN;
+        this.locationId = process.env.SQUARE_LOCATIONID;
+
         this.api = new SquareConnect.LocationsApi();
-        this.locationId = 'CBASEFEwclskyf3o1G8FCJZ7QUQgAQ';
         this.transactions_api = new SquareConnect.TransactionsApi();
 
     }
@@ -73,7 +74,7 @@ module.exports = class Square {
             return ret;
 
         }, function (error) {
-            console.log('Square Payment PRocessing Error' + error.response.text)
+            console.log('Square Payment Processing Error' + error.response.text)
             let e = JSON.parse(error.response.text);
             return { error: e.errors[0].detail };
         });
@@ -83,7 +84,7 @@ module.exports = class Square {
     async refund(order, amount) {
         return new Promise(async (resolve, reject) => {
             let amount_money = {
-                amount: amount * 100,
+                amount: (amount * 100).toFixed(0),
                 currency: order.payment.square.tenders[0].amount_money.currency
             }
             let square = order.payment.square;
