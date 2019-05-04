@@ -48,6 +48,9 @@ module.exports = class Shipping {
         let x = await s.buy(rate).catch((e) => {
             console.log(e)
         });
+        if (!x) {
+            return null;
+        }
         console.log(x);
         console.log('END BACKEND SHIPPING PURCHASE');
         let obj = {
@@ -81,14 +84,14 @@ module.exports = class Shipping {
     async fromAddr() {
         this.fromAddress = new this.api.Address({
             verify_strict: ['delivery'],
-            street1: '1039 TURNSTONE RD',
+            street1: '1664 Aryana Drive',
             street2: '',
-            city: 'CARLSBAD',
+            city: 'ENCINITAS',
             state: 'CA',
-            zip: '92011',
+            zip: '92024',
             country: 'US',
-            company: 'BigKatOriginal',
-            phone: '760-822-4927',
+            company: 'Big Kat Original',
+            phone: '760-815-8506',
         })
 
         await this.fromAddress.save();

@@ -62,6 +62,21 @@ const ReturnSchema: Schema = new Schema({
 });
 
 
+const RateSchema: Schema = new Schema({
+    id: String,
+    carrier: String,
+    createdAt: String,
+    currency: String,
+    
+    object: String,
+    rate: String,
+    service: String,
+    shipment_id: String,
+    updatedAt: String,
+    delivery_days: Number
+});
+    
+
 const PaymentSchema: Schema = new Schema({
     processor: String,
     square: SquareTransactionResponseSchema,
@@ -80,6 +95,7 @@ const OrderSchema: Schema = new Schema({
     total: Number,
     cost: Number,
     shipped: Boolean,
+    shippingRate: RateSchema,
     shipmentId: String,
     shippingCarrier: String,
     shippingMethod: String,
@@ -139,6 +155,21 @@ interface Return extends Document {
 };
 
 
+interface Rate extends Document {
+    id: string,
+    carrier: string,
+    createdAt: string,
+    currency: string,
+    
+    object: string,
+    rate: string,
+    service: string,
+    shipment_id: string,
+    updatedAt: string,
+    delivery_days: number
+}
+
+
 interface Order extends Document {
     //_id: string,
     //name: string,
@@ -153,6 +184,7 @@ interface Order extends Document {
     total: number,
     cost: number,
     shipped: boolean,
+    shippingRate: Rate,
     shipmentId: string,
     shippingCarrier: string,
     shippingMethod: string,

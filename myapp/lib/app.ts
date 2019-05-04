@@ -87,7 +87,7 @@ class App {
         this.app.use(passport.session());
 
         /** FOR PRODUCTION INITIALIZATION 
-           */
+           
         
         const admin = {
             email: 'channingschwaebe@gmail.com',
@@ -97,7 +97,7 @@ class App {
         }
         this.database.addUser(admin);
 
-      
+      */
 
         
          

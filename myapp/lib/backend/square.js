@@ -10,12 +10,13 @@ module.exports = class Square {
 
         this.api = new SquareConnect.LocationsApi();
         this.transactions_api = new SquareConnect.TransactionsApi();
-
+        //this.listLocations();
     }
 
     listLocations() {
         this.api.listLocations().then(function (data) {
-            console.log('API called successfully. Returned data: ' + data);
+            console.log('API called successfully. Returned data: ');
+            console.log(data);
         }, function (error) {
             console.error(error);
         });
@@ -84,7 +85,7 @@ module.exports = class Square {
     async refund(order, amount) {
         return new Promise(async (resolve, reject) => {
             let amount_money = {
-                amount: (amount * 100).toFixed(0),
+                amount: +(amount * 100).toFixed(0),
                 currency: order.payment.square.tenders[0].amount_money.currency
             }
             let square = order.payment.square;
