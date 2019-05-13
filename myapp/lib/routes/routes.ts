@@ -317,6 +317,14 @@ export class Routes {
                     data: result
                 })
             })
+        
+        app.route('/api/orders')
+            .get(async (req: Request, res: Response) => {
+                let result = await database.getOrders();
+                res.status(200).send({
+                    data: result
+                })
+            })
 
         app.route('/api/orders/update')
             .post(async (req: Request, res: Response) => {
@@ -330,7 +338,6 @@ export class Routes {
         app.route('/api/orders/recent')
             .get(async (req: Request, res: Response) => {
                 let result = await database.getRecentOrders();
-                console.log(result);
                 res.status(200).send({
                     data: result
                 })
@@ -341,7 +348,6 @@ export class Routes {
         app.route('/api/orders/unfulfilled')
             .get(async (req: Request, res: Response) => {
                 let result = await database.getUnfulfilledOrders();
-                console.log(result);
                 res.status(200).send({
                     data: result
                 })
@@ -350,7 +356,6 @@ export class Routes {
         app.route('/api/orders/id/:orderID')
             .get(async (req: Request, res: Response) => {
                 let result = await database.getOrderById(req.params.orderID);
-                console.log(result);
                 res.status(200).send({
                     data: result
                 })
@@ -360,7 +365,6 @@ export class Routes {
         app.route('/api/orders/email/:email')
             .get(async (req: Request, res: Response) => {
                 let result = await database.getOrderByEmail(req.params.email);
-                console.log(result);
                 res.status(200).send({
                     data: result
                 })
@@ -370,7 +374,6 @@ export class Routes {
         app.route('/api/orders/phone/:phone')
             .get(async (req: Request, res: Response) => {
                 let result = await database.getOrderByPhone(req.params.phone);
-                console.log(result);
                 res.status(200).send({
                     data: result
                 })

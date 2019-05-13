@@ -391,6 +391,22 @@ export class Database {
 
 
     /**
+     * Used to get All Orders
+     * 
+     */
+    public async getOrders() {
+        return new Promise<Order[]>(async function (resolve, reject) {
+            OrderModel.find().sort({ createdAt: -1 }).exec(function (err, success) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(success)
+            })
+        })
+    }
+
+
+    /**
      * Used to get Recent Orders
      * 
      */
