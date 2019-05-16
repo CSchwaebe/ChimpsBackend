@@ -36,8 +36,8 @@ export class Database {
 
     public async findUserById(id, cb) {
         let result = await UserModel.findById(id).exec();
-        console.log('FIND BY ID\n');
-        console.log(result);
+        //console.log('FIND BY ID\n');
+        //console.log(result);
         if (result !== null) {
             cb(null, result);
         } else {
@@ -47,8 +47,8 @@ export class Database {
 
     public async findUserByUsername(username, cb) {
         let result = await UserModel.findOne({ username: username }).exec();
-        console.log('FIND BY USERNAME\n');
-        console.log(result);
+        //console.log('FIND BY USERNAME\n');
+        //console.log(result);
         if (result !== null) {
             return cb(null, result);
         } else {
@@ -520,9 +520,7 @@ export class Database {
                 if (err)
                     reject(err)
                 else {
-                    console.log(success)
                     resolve(success)
-
                 }
 
             })
@@ -570,7 +568,7 @@ export class Database {
             //console.log('Get Products - Location then regex \n');
             //console.log(loc);
             let regex = new RegExp(loc.substring(1));
-            console.log(regex);
+            //console.log(regex);
             ProductModel.find({ location: regex }).exec(function (err, results) {
                 if (err)
                     reject(err)

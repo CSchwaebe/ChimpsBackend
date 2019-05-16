@@ -45,9 +45,9 @@ export class Routes {
                 
                 passport.authenticate('local', { session: true }),
                 function (req, res) {
-                    console.log('Route /login');
-                    console.log('USER:\n');
-                    console.log(req.user);
+                    //console.log('Route /login');
+                    //console.log('USER:\n');
+                    //console.log(req.user);
 
                     res.send({ data: 'Verified' });
                 })
@@ -57,9 +57,9 @@ export class Routes {
             .post(
                 passport.authenticate('local'),
                 function (req, res) {
-                    console.log('Route /login');
-                    console.log('In Post\n')
-                    console.log(req.user);
+                    //console.log('Route /login');
+                    //console.log('In Post\n')
+                    //console.log(req.user);
                     if (req.user.role) {
                         //TODO - CHANGE SECRET TO ENVIRONMENT VARIABLE
                         const payload = { admin: req.user.role };
@@ -127,7 +127,7 @@ export class Routes {
 
         app.route('/api/home/update')
             .post((req: Request, res: Response) => {
-                console.log(req.body);
+                //console.log(req.body);
                 let result = database.updateHome(req.body);
                 res.status(200).send({
                     data: result
@@ -193,7 +193,7 @@ export class Routes {
 
         app.route('/api/collections/deactivate')
             .post(async (req: Request, res: Response) => {
-                console.log(req.body);
+                //console.log(req.body);
                 let result = await database.deactivateGroup(req.body);
                 res.status(200).send({
                     data: result
@@ -448,7 +448,7 @@ export class Routes {
 
         app.route('/api/products/restock')
             .post(async (req: Request, res: Response) => {
-                console.log('In route');
+                //console.log('In route');
                 let result = await database.restockProduct(req.body.id, req.body.size, req.body.quantity);
                 res.status(200).send({
                     data: result
@@ -597,9 +597,9 @@ export class Routes {
 
             app.route('/api/square/pay')
             .post(async (req: Request, res: Response) => {
-                console.log(req.body);
+                //console.log(req.body);
                 let result = await Square.processPayment(req.body);
-                console.log('result');
+                //console.log('result');
                 console.log(result);
                 //let result = database.removeSubscriber(req.body);
                 res.status(200).send({
