@@ -607,8 +607,70 @@ export class Routes {
                 })
             })
         
-        //REMOVE THESE NEXT THREE METHODS ?? - todo
+       
 
+
+        /////////////////////////////////////////////////////////////////////////
+        //              PAGES
+        /////////////////////////////////////////////////////////////////////////  
+
+        app.route('/api/pages')
+        .post((req: Request, res: Response) => {
+            let result = database.postPage(req.body);
+            res.status(200).send({
+                data: result
+            })
+        })
+
+        .get(async (req: Request, res: Response) => {
+            let result = await database.getAllPages();
+            res.status(200).send({
+                data: result
+            })
+        })
+
+        app.route('/api/pages/delete')
+        .post((req: Request, res: Response) => {
+            let result = database.deletePage(req.body);
+            res.status(200).send({
+                data: result
+            })
+        })
+
+        app.route('/api/pages/update')
+        .post((req: Request, res: Response) => {
+            let result = database.updatePage(req.body);
+            res.status(200).send({
+                data: result
+            })
+        })
+
+        app.route('/api/pages/id/:id')
+        .get(async (req: Request, res: Response) => {
+            let id = req.params.id;
+            let result = await database.getPageById(id);
+            console.log(result);
+            console.log(id);
+            res.status(200).send({
+                data: result
+            })
+        })
+
+        app.route('/api/pages/:stub/')
+        .get(async (req: Request, res: Response) => {
+            let stub = req.params.stub;
+            let result = await database.getPageByStub(stub);
+            console.log(result);
+            console.log(stub);
+            res.status(200).send({
+                data: result
+            })
+        })
+
+
+
+
+         //REMOVE THESE NEXT THREE METHODS ?? - todo
 
         app.route('/:collection/:category/:subcategory')
             .get(async (req: Request, res: Response) => {
@@ -633,9 +695,6 @@ export class Routes {
                     data: productArray
                 })
             })
-
-
-
 
 
 

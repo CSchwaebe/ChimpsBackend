@@ -8,6 +8,7 @@ import { UserModel, User } from '../models/user';
 import { OrderModel, Order } from '../models/order'
 import { Message, MessageModel } from '../models/message';
 import { Subscriber, SubscriberModel } from '../models/subscriber';
+import { Page, PageModel} from '../models/page';
 
 export class Database {
 
@@ -184,7 +185,7 @@ export class Database {
                 })
             })
         }
-           
+
     }
 
     /**
@@ -705,16 +706,16 @@ export class Database {
     * 
     * @param message - The Message we are adding
     */
-   public async deleteMessage(message: Message) {
-    return new Promise(async function (resolve, reject) {
-        MessageModel.findByIdAndDelete(message._id, function (err, success) {
-            if (err)
-                reject(err)
-            else
-                resolve(success)
+    public async deleteMessage(message: Message) {
+        return new Promise(async function (resolve, reject) {
+            MessageModel.findByIdAndDelete(message._id, function (err, success) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(success)
+            })
         })
-    })
-}
+    }
 
     /** 
     * 
@@ -738,6 +739,106 @@ export class Database {
     public async getMessageById(id: string): Promise<Message> {
         return new Promise<Message>((resolve, reject) => {
             MessageModel.findById(id).exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////
+    //                      Pages
+    ///////////////////////////////////////////////////////////////////////
+
+    /**
+    * Used to add a Message
+    * 
+    * @param message - The Message we are adding
+    */
+    public async postPage(page: Page) {
+        return new Promise(async function (resolve, reject) {
+            let pageModel = new PageModel(page);
+
+            pageModel.save(function (err, success) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(success)
+            })
+        })
+    }
+
+    /**
+    * Used to update a Message
+    * 
+    * @param message - The Message we are updating
+    */
+    public async updatePage(page: Page) {
+        return new Promise(async function (resolve, reject) {
+            PageModel.findByIdAndUpdate(page._id, page, { new: true }, function (err, success) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(success)
+            })
+        })
+    }
+
+    /**
+    * Used to add a Message
+    * 
+    * @param message - The Message we are adding
+    */
+    public async deletePage(page: Page) {
+        return new Promise(async function (resolve, reject) {
+            PageModel.findByIdAndDelete(page._id, function (err, success) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(success)
+            })
+        })
+    }
+
+     /** 
+    * 
+    * 
+    */
+   public async getAllPages(): Promise<Page[]> {
+    return new Promise<Page[]>((resolve, reject) => {
+        PageModel.find().exec(function (err, results) {
+            if (err)
+                reject(err)
+            else
+                resolve(results)
+        })
+    });
+}
+
+    /** 
+    * 
+    * 
+    */
+    public async getPageByStub(stub: string): Promise<Page> {
+        return new Promise<Page>((resolve, reject) => {
+            PageModel.findOne({stub: stub}).exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+    }
+
+    /** 
+       * 
+       * 
+       */
+    public async getPageById(id: string): Promise<Page> {
+        return new Promise<Page>((resolve, reject) => {
+            PageModel.findById(id).exec(function (err, results) {
                 if (err)
                     reject(err)
                 else
