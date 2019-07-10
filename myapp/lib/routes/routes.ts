@@ -669,6 +669,39 @@ export class Routes {
 
 
 
+        /////////////////////////////////////////////////////////////////////////
+        //              ACCOUNT
+        /////////////////////////////////////////////////////////////////////////  
+
+
+        app.route('/api/account')
+        .post((req: Request, res: Response) => {
+            let result = database.postAccount(req.body);
+            res.status(200).send({
+                data: result
+            })
+        })
+
+        .get(async (req: Request, res: Response) => {
+            let result = await database.getAccount();
+            res.status(200).send({
+                data: result
+            })
+        })
+
+        app.route('/api/account/update')
+        .post((req: Request, res: Response) => {
+            let result = database.updateAccount(req.body);
+            res.status(200).send({
+                data: result
+            })
+        })
+
+       
+        
+
+
+
 
          //REMOVE THESE NEXT THREE METHODS ?? - todo
 

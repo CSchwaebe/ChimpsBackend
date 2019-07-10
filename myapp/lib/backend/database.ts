@@ -8,7 +8,8 @@ import { UserModel, User } from '../models/user';
 import { OrderModel, Order } from '../models/order'
 import { Message, MessageModel } from '../models/message';
 import { Subscriber, SubscriberModel } from '../models/subscriber';
-import { Page, PageModel} from '../models/page';
+import { Page, PageModel } from '../models/page';
+import { Account, AccountModel } from '../models/account';
 
 export class Database {
 
@@ -802,20 +803,20 @@ export class Database {
         })
     }
 
-     /** 
-    * 
-    * 
-    */
-   public async getAllPages(): Promise<Page[]> {
-    return new Promise<Page[]>((resolve, reject) => {
-        PageModel.find().exec(function (err, results) {
-            if (err)
-                reject(err)
-            else
-                resolve(results)
-        })
-    });
-}
+    /** 
+   * 
+   * 
+   */
+    public async getAllPages(): Promise<Page[]> {
+        return new Promise<Page[]>((resolve, reject) => {
+            PageModel.find().exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+    }
 
     /** 
     * 
@@ -823,7 +824,7 @@ export class Database {
     */
     public async getPageByStub(stub: string): Promise<Page> {
         return new Promise<Page>((resolve, reject) => {
-            PageModel.findOne({stub: stub}).exec(function (err, results) {
+            PageModel.findOne({ stub: stub }).exec(function (err, results) {
                 if (err)
                     reject(err)
                 else
@@ -846,6 +847,61 @@ export class Database {
             })
         });
     }
+
+
+    ///////////////////////////////////////////////////////////////////////
+    //                      Accounts
+    ///////////////////////////////////////////////////////////////////////
+
+    /**
+    * Used to add a Message
+    * 
+    * @param message - The Message we are adding
+    */
+    public async postAccount(acct: Account) {
+        return new Promise(async function (resolve, reject) {
+            let accountModel = new AccountModel(acct);
+
+            accountModel.save(function (err, success) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(success)
+            })
+        })
+    }
+
+    /**
+    * Used to update a Message
+    * 
+    * @param message - The Message we are updating
+    */
+    public async updateAccount(acct: Account) {
+        return new Promise(async function (resolve, reject) {
+            AccountModel.findByIdAndUpdate(acct._id, acct, { new: true }, function (err, success) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(success)
+            })
+        })
+    }
+     
+    /** 
+       * 
+       * 
+       */
+    public async getAccount(): Promise<Account> {
+        return new Promise<Account>((resolve, reject) => {
+            AccountModel.findOne().exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+    }
+
 
 
 
