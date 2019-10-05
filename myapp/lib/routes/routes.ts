@@ -429,6 +429,13 @@ export class Routes {
                 })
             })
 
+            .get(async (req: Request, res: Response) => {
+                let product = await database.getOneProduct();
+                res.status(200).send({
+                    data: product
+                })
+            })
+
         app.route('/api/products/update')
             .post(async (req: Request, res: Response) => {
                 let result = await database.updateProduct(req.body);
@@ -506,9 +513,6 @@ export class Routes {
                     data: products
                 })
             })
-
-
-
 
         app.route('/api/products/:stub')
             .get(async (req: Request, res: Response) => {
@@ -696,6 +700,44 @@ export class Routes {
                 data: result
             })
         })
+
+        /////////////////////////////////////////////////////////////////////////
+        //              Styles
+        /////////////////////////////////////////////////////////////////////////  
+
+
+        app.route('/api/styles')
+        .post((req: Request, res: Response) => {
+            let result = database.postStyle(req.body);
+            res.status(200).send({
+                data: result
+            })
+        })
+
+        .get(async (req: Request, res: Response) => {
+            let result = await database.getStyle();
+            res.status(200).send({
+                data: result
+            })
+        })
+
+        app.route('/api/styles/update')
+        .post((req: Request, res: Response) => {
+            let result = database.updateStyle(req.body);
+            res.status(200).send({
+                data: result
+            })
+        })
+
+        /*
+        app.route('/api/styles/delete')
+        .post(async (req: Request, res: Response) => {
+            let result = await database.deleteStyle(req.body);
+            res.status(200).send({
+                data: result
+            })
+        })
+        */
 
        
         

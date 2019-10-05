@@ -10,6 +10,8 @@ import { Message, MessageModel } from '../models/message';
 import { Subscriber, SubscriberModel } from '../models/subscriber';
 import { Page, PageModel } from '../models/page';
 import { Account, AccountModel } from '../models/account';
+import { Style, StyleModel } from '../models/style';
+
 
 export class Database {
 
@@ -599,6 +601,21 @@ export class Database {
         });
     }
 
+     /**
+    * Used to get one random active product (for admin preview page)
+    * 
+    */
+   public async getOneProduct(): Promise<Product> {
+    return new Promise<Product>((resolve, reject) => {
+        ProductModel.findOne({ active: true }).exec(function (err, results) {
+            if (err)
+                reject(err)
+            else
+                resolve(results)
+        })
+    });
+}
+
     /**
        * Used to get the names of all the Subcategories within a Category
        * 
@@ -750,13 +767,114 @@ export class Database {
 
 
     ///////////////////////////////////////////////////////////////////////
+    //                      Styles
+    ///////////////////////////////////////////////////////////////////////
+
+    /**
+    * Used to add a Style
+    * 
+    * @param style - The Style we are adding
+    */
+    public async postStyle(style: Style) {
+        return new Promise(async function (resolve, reject) {
+            let styleModel = new StyleModel(style);
+
+            styleModel.save(function (err, success) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(success)
+            })
+        })
+    }
+
+    /**
+    * Used to update a Style
+    * 
+    * @param style - The Style we are updating
+    */
+    public async updateStyle(style: Style) {
+        return new Promise(async function (resolve, reject) {
+            StyleModel.findByIdAndUpdate(style._id, style, { new: true }, function (err, success) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(success)
+            })
+        })
+    }
+
+    /**
+    * Used to add a Style
+    * 
+    * @param style - The Style we are adding
+    */
+    public async deleteStyle(style: Style) {
+        return new Promise(async function (resolve, reject) {
+            StyleModel.findByIdAndDelete(style._id, function (err, success) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(success)
+            })
+        })
+    }
+
+    /** 
+    * 
+    * 
+    */
+    public async getStyle(): Promise<Style> {
+        return new Promise<Style>((resolve, reject) => {
+            StyleModel.findOne().exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+    }
+
+    /** 
+    * 
+    * 
+    */
+    public async getStyles(): Promise<Style[]> {
+        return new Promise<Style[]>((resolve, reject) => {
+            StyleModel.find().exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+    }
+
+
+
+    /** 
+       * 
+       * 
+       */
+    public async getStyleById(id: string): Promise<Style> {
+        return new Promise<Style>((resolve, reject) => {
+            StyleModel.findById(id).exec(function (err, results) {
+                if (err)
+                    reject(err)
+                else
+                    resolve(results)
+            })
+        });
+    }
+
+    ///////////////////////////////////////////////////////////////////////
     //                      Pages
     ///////////////////////////////////////////////////////////////////////
 
     /**
-    * Used to add a Message
+    * Used to add a Page
     * 
-    * @param message - The Message we are adding
+    * @param page - The Page we are adding
     */
     public async postPage(page: Page) {
         return new Promise(async function (resolve, reject) {
@@ -772,9 +890,9 @@ export class Database {
     }
 
     /**
-    * Used to update a Message
+    * Used to update a Page
     * 
-    * @param message - The Message we are updating
+    * @param page - The Page we are updating
     */
     public async updatePage(page: Page) {
         return new Promise(async function (resolve, reject) {
@@ -788,9 +906,9 @@ export class Database {
     }
 
     /**
-    * Used to add a Message
+    * Used to add a Page
     * 
-    * @param message - The Message we are adding
+    * @param page - The Page we are adding
     */
     public async deletePage(page: Page) {
         return new Promise(async function (resolve, reject) {
@@ -854,9 +972,9 @@ export class Database {
     ///////////////////////////////////////////////////////////////////////
 
     /**
-    * Used to add a Message
+    * Used to add a Page
     * 
-    * @param message - The Message we are adding
+    * @param acct - The Page we are adding
     */
     public async postAccount(acct: Account) {
         return new Promise(async function (resolve, reject) {
@@ -872,9 +990,9 @@ export class Database {
     }
 
     /**
-    * Used to update a Message
+    * Used to update a Account
     * 
-    * @param message - The Message we are updating
+    * @param acct - The Account we are updating
     */
     public async updateAccount(acct: Account) {
         return new Promise(async function (resolve, reject) {
@@ -886,7 +1004,7 @@ export class Database {
             })
         })
     }
-     
+
     /** 
        * 
        * 
